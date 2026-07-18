@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 490 340" width="490" height="340">
-<rect width="490" height="340" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 490 300" width="490" height="300">
+<rect width="490" height="300" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1"/>
 <rect width="490" height="36" rx="8" fill="#21262d"/>
 <rect x="0" y="28" width="490" height="8" fill="#21262d"/>
 <circle cx="18" cy="18" r="5" fill="#ff5f57"/>
@@ -45,13 +45,5 @@
   <animate attributeName="opacity" from="0" to="1" begin="1.05s" dur="0.3s" fill="freeze"/>
   <text x="24" y="260" font-family="monospace" font-size="13" fill="#58a6ff">focus</text>
   <text x="120" y="260" font-family="monospace" font-size="13" fill="#c9d1d9">iOS · Web · AI/ML</text>
-</g>
-<line x1="24" y1="280" x2="466" y2="280" stroke="#30363d" stroke-width="1"/>
-<g opacity="0">
-  <animate attributeName="opacity" from="0" to="1" begin="1.2s" dur="0.3s" fill="freeze"/>
-  <text x="24" y="296" font-family="monospace" font-size="11" fill="#58a6ff">  __  __       </text>
-  <text x="24" y="312" font-family="monospace" font-size="11" fill="#58a6ff"> |  \/  |__  _ _</text>
-  <text x="24" y="328" font-family="monospace" font-size="11" fill="#58a6ff"> | |\/| / _` | '_|</text>
-  <text x="24" y="344" font-family="monospace" font-size="11" fill="#58a6ff"> |_|  |_\__,_|_|  </text>
 </g>
 </svg>

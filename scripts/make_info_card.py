@@ -3,7 +3,7 @@
 import os
 
 CARD_W = 490
-CARD_H = 340
+CARD_H = 300
 LINE_H = 28
 DELAY_STEP = 0.15
 
@@ -40,24 +40,6 @@ def make_info_card(output_path: str = "info-card.svg"):
         svg.append(f'  <text x="120" y="{y}" font-family="monospace" font-size="13" fill="#c9d1d9">{value}</text>')
         svg.append(f'</g>')
         y += LINE_H
-
-    # Divider
-    svg.append(f'<line x1="24" y1="{y - 8}" x2="{CARD_W - 24}" y2="{y - 8}" stroke="#30363d" stroke-width="1"/>')
-
-    # ASCII art logo
-    logo_y = y + 8
-    ascii_logo = [
-        "  __  __       ",
-        " |  \\/  |__  _ _",
-        " | |\\/| / _` | '_|",
-        " |_|  |_\\__,_|_|  ",
-    ]
-    delay_logo = len(lines_data) * DELAY_STEP
-    svg.append(f'<g opacity="0">')
-    svg.append(f'  <animate attributeName="opacity" from="0" to="1" begin="{delay_logo}s" dur="0.3s" fill="freeze"/>')
-    for j, row in enumerate(ascii_logo):
-        svg.append(f'  <text x="24" y="{logo_y + j * 16}" font-family="monospace" font-size="11" fill="#58a6ff">{row}</text>')
-    svg.append(f'</g>')
 
     svg.append('</svg>')
 

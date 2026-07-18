@@ -15,9 +15,12 @@ LABEL_W = 48
 HEADER_H = 24
 LEGEND_H = 30
 STATS_H = 36
+PAD = 16
+CARD_BG = "#161b22"
+CARD_STROKE = "#30363d"
 
-SVG_W = LABEL_W + WEEKS * (CELL_SIZE + CELL_GAP) + 16
-SVG_H = HEADER_H + DAYS * (CELL_SIZE + CELL_GAP) + LEGEND_H + STATS_H + 16
+SVG_W = LABEL_W + WEEKS * (CELL_SIZE + CELL_GAP) + 16 + PAD * 2
+SVG_H = HEADER_H + DAYS * (CELL_SIZE + CELL_GAP) + LEGEND_H + STATS_H + 16 + PAD * 2
 
 MONTH_LABELS = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -65,7 +68,7 @@ def render_heatmap(data_path: str = "data/contributions.json", output_path: str 
     # SVG
     svg = []
     svg.append(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {SVG_W} {SVG_H}" width="{SVG_W}" height="{SVG_H}">')
-    svg.append(f'<rect width="{SVG_W}" height="{SVG_H}" fill="#0d1117"/>')
+    svg.append(f'<rect width="{SVG_W}" height="{SVG_H}" rx="8" fill="{CARD_BG}" stroke="{CARD_STROKE}" stroke-width="1"/>')
     svg.append('<style>text { font-family: "Courier New", Courier, monospace; }</style>')
 
     # Month labels
@@ -75,15 +78,15 @@ def render_heatmap(data_path: str = "data/contributions.json", output_path: str 
         d = start + __import__('datetime').timedelta(days=first_day_offset)
         m = d.month
         if m != prev_month:
-            x = LABEL_W + wi * (CELL_SIZE + CELL_GAP)
-            svg.append(f'<text x="{x}" y="{HEADER_H - 6}" font-size="10" fill="#8b949e">{MONTH_LABELS[m]}</text>')
+            x = PAD + LABEL_W + wi * (CELL_SIZE + CELL_GAP)
+            svg.append(f'<text x="{x}" y="{PAD + HEADER_H - 6}" font-size="10" fill="#8b949e">{MONTH_LABELS[m]}</text>')
             prev_month = m
 
     # Day labels
     for di in range(DAYS):
-        y = HEADER_H + di * (CELL_SIZE + CELL_GAP) + CELL_SIZE - 2
+        y = PAD + HEADER_H + di * (CELL_SIZE + CELL_GAP) + CELL_SIZE - 2
         if DAY_LABELS[di]:
-            svg.append(f'<text x="0" y="{y}" font-size="9" fill="#8b949e">{DAY_LABELS[di]}</text>')
+            svg.append(f'<text x="{PAD}" y="{y}" font-size="9" fill="#8b949e">{DAY_LABELS[di]}</text>')
 
     # Cells with SMIL staggered animation (GitHub-safe)
     cell_idx = 0
@@ -93,8 +96,8 @@ def render_heatmap(data_path: str = "data/contributions.json", output_path: str 
             if level < 0:
                 continue
             color = PALETTE[min(level, len(PALETTE) - 1)]
-            x = LABEL_W + wi * (CELL_SIZE + CELL_GAP)
-            y = HEADER_H + di * (CELL_SIZE + CELL_GAP)
+            x = PAD + LABEL_W + wi * (CELL_SIZE + CELL_GAP)
+            y = PAD + HEADER_H + di * (CELL_SIZE + CELL_GAP)
             delay = (wi * DAYS + di) * 0.003
             svg.append(f'<rect x="{x}" y="{y}" width="{CELL_SIZE}" height="{CELL_SIZE}" rx="{CELL_R}" fill="{color}" opacity="0">')
             svg.append(f'  <animate attributeName="opacity" from="0" to="1" begin="{delay:.3f}s" dur="0.15s" fill="freeze"/>')
@@ -102,17 +105,17 @@ def render_heatmap(data_path: str = "data/contributions.json", output_path: str 
             cell_idx += 1
 
     # Legend
-    ly = HEADER_H + DAYS * (CELL_SIZE + CELL_GAP) + 12
-    svg.append(f'<text x="{LABEL_W}" y="{ly + 10}" font-size="10" fill="#8b949e">Less</text>')
+    ly = PAD + HEADER_H + DAYS * (CELL_SIZE + CELL_GAP) + 12
+    svg.append(f'<text x="{PAD + LABEL_W}" y="{ly + 10}" font-size="10" fill="#8b949e">Less</text>')
     for i, c in enumerate(PALETTE):
-        lx = LABEL_W + 36 + i * (CELL_SIZE + CELL_GAP)
+        lx = PAD + LABEL_W + 36 + i * (CELL_SIZE + CELL_GAP)
         svg.append(f'<rect x="{lx}" y="{ly}" width="{CELL_SIZE}" height="{CELL_SIZE}" rx="{CELL_R}" fill="{c}"/>')
-    svg.append(f'<text x="{LABEL_W + 36 + len(PALETTE) * (CELL_SIZE + CELL_GAP) + 6}" y="{ly + 10}" font-size="10" fill="#8b949e">More</text>')
+    svg.append(f'<text x="{PAD + LABEL_W + 36 + len(PALETTE) * (CELL_SIZE + CELL_GAP) + 6}" y="{ly + 10}" font-size="10" fill="#8b949e">More</text>')
 
     # Stats
     total = data.get("total", 0)
     sy = ly + LEGEND_H + 8
-    svg.append(f'<text x="{LABEL_W}" y="{sy}" font-size="11" fill="#8b949e">{total:,} contributions in the last year</text>')
+    svg.append(f'<text x="{PAD + LABEL_W}" y="{sy}" font-size="11" fill="#8b949e">{total:,} contributions in the last year</text>')
 
     svg.append('</svg>')
 

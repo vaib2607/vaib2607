@@ -8,6 +8,9 @@ WIDTH = 80
 HEIGHT = 25
 CELL_W = 7
 CELL_H = 12
+PAD = 16
+CARD_BG = "#161b22"
+CARD_STROKE = "#30363d"
 
 # Sunset palette
 PALETTE = [
@@ -24,8 +27,8 @@ def plasma_value(x, y, t):
     return (v1 + v2 + v3 + v4) / 4.0
 
 def make_plasma_svg(output_path: str = "plasma.svg"):
-    svg_w = WIDTH * CELL_W
-    svg_h = HEIGHT * CELL_H
+    svg_w = WIDTH * CELL_W + PAD * 2
+    svg_h = HEIGHT * CELL_H + PAD * 2
 
     num_frames = 4
     total_dur = 2.4
@@ -48,15 +51,15 @@ def make_plasma_svg(output_path: str = "plasma.svg"):
 
     lines = []
     lines.append(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {svg_w} {svg_h}" width="{svg_w}" height="{svg_h}">')
-    lines.append(f'<rect width="{svg_w}" height="{svg_h}" fill="#0a0a1a"/>')
+    lines.append(f'<rect width="{svg_w}" height="{svg_h}" rx="8" fill="{CARD_BG}" stroke="{CARD_STROKE}" stroke-width="1"/>')
     lines.append('<style>text { font-family: "Courier New", Courier, monospace; font-size: 10px; }</style>')
 
     keytimes = ";".join([f"{i/(num_frames-1):.2f}" for i in range(num_frames)])
 
     for row in range(HEIGHT):
         for col in range(WIDTH):
-            x = col * CELL_W
-            y = row * CELL_H + CELL_H - 1
+            x = PAD + col * CELL_W
+            y = PAD + row * CELL_H + CELL_H - 1
 
             v0 = plasma_value(col, row, 0)
             v0 = (v0 + 1) / 2.0

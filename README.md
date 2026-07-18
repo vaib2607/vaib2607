@@ -1,42 +1,16 @@
 <div align="center">
 
-```
-  __  __       ____               __    
- |  \/  |__  _ _\ \      / /__  _| |_  
- | |\/| / _` | '_ \ /\ / / _ \| '__| 
- |_|  |_|\__,_|_| |_\ V  /\__,_|_|    
-         github profile v2.0
-```
-
-</div>
-
-<div align="center">
-
-### `vaib@github ~ $ ./contributions.sh`
-
-<img src="./contrib-heatmap.svg" width="860" />
+<table border="0" cellpadding="0" cellspacing="14">
+<tr>
+<td valign="middle"><img src="./vaib-ascii.svg" width="480" /></td>
+<td valign="middle">
+<img src="./contrib-heatmap.svg" width="380" /><br><br>
+<img src="./info-card.svg" width="380" />
+</td>
+</tr>
+</table>
 
 <br>
-
-### `vaib@github ~ $ ./plasma.sh`
-
-<img src="./plasma.svg" width="560" />
-
-<br>
-
-### `vaib@github ~ $ ./drive.sh`
-
-<img src="./vaib-ascii.svg" width="420" />
-
-<br>
-
-### `vaib@github ~ $ whoami`
-
-<img src="./info-card.svg" width="490" />
-
-<br>
-
-### `vaib@github ~ $ cat /etc/motd`
 
 ```
   Welcome to my corner of GitHub.
@@ -50,6 +24,6 @@
 
 <br>
 
-![Footer](https://capsule-render.vercel.app/api?type=waving&color=0:0d1117,50:161b22,100:0d1117&height=120&section=footer&text=vaib2607&fontSize=14&fontColor=8b949e&animation=fadeIn)
+![Footer](https://capsule-render.vercel.app/api?type=waving&color=0:0d1117,50:161b22,100:0d1117&height=120&section=footer&animation=fadeIn)
 
 </div>

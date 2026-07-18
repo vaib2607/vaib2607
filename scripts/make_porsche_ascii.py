@@ -9,6 +9,9 @@ WIDTH = 60
 CELL_W = 7
 CELL_H = 12
 FRAME_STEP = 3  # sample every Nth gif frame to keep SVG size reasonable
+PAD = 16
+CARD_BG = "#161b22"
+CARD_STROKE = "#30363d"
 
 def brightness_to_char(b: float) -> str:
     idx = int(b * (len(RAMP) - 1))
@@ -50,12 +53,12 @@ def make_porsche_svg(input_path: str = "data/porsche-source.gif", output_path: s
             grid.append(line)
         grids.append(grid)
 
-    svg_w = WIDTH * CELL_W
-    svg_h = height * CELL_H
+    svg_w = WIDTH * CELL_W + PAD * 2
+    svg_h = height * CELL_H + PAD * 2
 
     lines = []
     lines.append(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {svg_w} {svg_h}" width="{svg_w}" height="{svg_h}">')
-    lines.append(f'<rect width="{svg_w}" height="{svg_h}" fill="#0d1117"/>')
+    lines.append(f'<rect width="{svg_w}" height="{svg_h}" rx="8" fill="{CARD_BG}" stroke="{CARD_STROKE}" stroke-width="1"/>')
     lines.append('<style>text { font-family: "Courier New", Courier, monospace; font-size: 11px; }</style>')
 
     keytimes = ";".join(f"{i/(num_frames-1):.4f}" for i in range(num_frames))
@@ -69,8 +72,8 @@ def make_porsche_svg(input_path: str = "data/porsche-source.gif", output_path: s
             colors = ";".join(grids[fi][row][col][1] for fi in range(num_frames))
             glyph = ch0 if ch0 != ' ' else chr(160)
 
-            x = col * CELL_W
-            y = row * CELL_H + CELL_H - 2
+            x = PAD + col * CELL_W
+            y = PAD + row * CELL_H + CELL_H - 2
 
             lines.append(f'<text x="{x}" y="{y}" fill="{color0}">{glyph}')
             lines.append(f'  <animate attributeName="fill" values="{colors}" keyTimes="{keytimes}" dur="{total_dur:.2f}s" repeatCount="indefinite"/>')

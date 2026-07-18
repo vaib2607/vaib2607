@@ -8,6 +8,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
+from theme import THEMES
 from make_porsche_ascii import build_porsche
 from render_heatmap_svg import build_heatmap
 from make_info_card import build_info_card
@@ -17,8 +18,6 @@ OUTER_PAD = 24     # margin around the whole composite
 ROW_GAP = 16       # gap between the top row and the motd panel
 GAP = 24           # gap between tiles
 RIGHT_W = 400      # display width of the right-column tiles' inner content
-SHELL_BG = "#1c2128"
-SHELL_STROKE = "#30363d"
 SHELL_RX = 20
 
 MOTD_LINES = [
@@ -32,8 +31,8 @@ MOTD_LINES = [
 MOTD_LINE_H = 26
 MOTD_PAD = 28
 
-def shell(x, y, w, h):
-    return f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{SHELL_RX}" fill="{SHELL_BG}" stroke="{SHELL_STROKE}" stroke-width="1"/>'
+def shell(x, y, w, h, theme):
+    return f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{SHELL_RX}" fill="{theme["shell_bg"]}" stroke="{theme["shell_stroke"]}" stroke-width="1"/>'
 
 def nested(x, y, disp_w, disp_h, orig_w, orig_h, inner):
     return (
@@ -41,10 +40,11 @@ def nested(x, y, disp_w, disp_h, orig_w, orig_h, inner):
         f'viewBox="0 0 {orig_w} {orig_h}">{inner}</svg>'
     )
 
-def make_bento(output_path: str = "bento.svg"):
-    hero_w, hero_h, hero_inner = build_porsche()
-    heat_w, heat_h, heat_inner = build_heatmap()
-    info_w, info_h, info_inner = build_info_card()
+def make_bento(output_path: str = "bento.svg", theme_name: str = "dark"):
+    theme = THEMES[theme_name]
+    hero_w, hero_h, hero_inner = build_porsche(theme=theme)
+    heat_w, heat_h, heat_inner = build_heatmap(theme=theme)
+    info_w, info_h, info_inner = build_info_card(theme=theme)
 
     heat_disp_h = heat_h * RIGHT_W / heat_w
     info_disp_h = info_h * RIGHT_W / info_w
@@ -71,33 +71,33 @@ def make_bento(output_path: str = "bento.svg"):
 
     parts = []
     parts.append(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {svg_w:.2f} {svg_h:.2f}" width="{svg_w:.0f}" height="{svg_h:.0f}">')
-    parts.append(f'<rect width="{svg_w:.2f}" height="{svg_h:.2f}" fill="#0d1117"/>')
+    parts.append(f'<rect width="{svg_w:.2f}" height="{svg_h:.2f}" fill="{theme["bg"]}"/>')
 
     # Hero tile — left
     hx, hy = OUTER_PAD, OUTER_PAD
-    parts.append(shell(hx, hy, hero_tile_w, hero_tile_h))
+    parts.append(shell(hx, hy, hero_tile_w, hero_tile_h, theme))
     parts.append(nested(hx + TILE_PAD, hy + TILE_PAD, hero_disp_w, hero_disp_h, hero_w, hero_h, hero_inner))
 
     # Right column
     rx = OUTER_PAD + hero_tile_w + GAP
     ry = OUTER_PAD
-    parts.append(shell(rx, ry, right_tile_w, heat_tile_h))
+    parts.append(shell(rx, ry, right_tile_w, heat_tile_h, theme))
     parts.append(nested(rx + TILE_PAD, ry + TILE_PAD, RIGHT_W, heat_disp_h, heat_w, heat_h, heat_inner))
 
     ry2 = ry + heat_tile_h + GAP
-    parts.append(shell(rx, ry2, right_tile_w, info_tile_h))
+    parts.append(shell(rx, ry2, right_tile_w, info_tile_h, theme))
     parts.append(nested(rx + TILE_PAD, ry2 + TILE_PAD, RIGHT_W, info_disp_h, info_w, info_h, info_inner))
 
     # motd — full-width row, playful copy, same shell as everything else
     my = OUTER_PAD + row1_h + ROW_GAP
-    parts.append(shell(OUTER_PAD, my, row1_w, motd_h))
+    parts.append(shell(OUTER_PAD, my, row1_w, motd_h, theme))
     cx = OUTER_PAD + row1_w / 2
     ty = my + MOTD_PAD + 14
     for line in MOTD_LINES:
         if line:
             parts.append(
                 f'<text x="{cx:.2f}" y="{ty}" text-anchor="middle" '
-                f'font-family="Courier New, Courier, monospace" font-size="14" fill="#c9d1d9">{line}</text>'
+                f'font-family="Courier New, Courier, monospace" font-size="14" fill="{theme["text_main"]}">{line}</text>'
             )
         ty += MOTD_LINE_H
 
@@ -109,4 +109,5 @@ def make_bento(output_path: str = "bento.svg"):
     print(f"Bento SVG saved to {output_path} ({svg_w:.0f}x{svg_h:.0f}, {fsize/1024:.0f}KB)")
 
 if __name__ == "__main__":
-    make_bento()
+    for name in THEMES:
+        make_bento(output_path=f"bento-{name}.svg", theme_name=name)

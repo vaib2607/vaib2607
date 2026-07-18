@@ -5,7 +5,9 @@ import os
 import sys
 from datetime import datetime
 
-PALETTE = ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"]
+sys.path.insert(0, os.path.dirname(__file__))
+from theme import THEMES
+
 CELL_SIZE = 13
 CELL_GAP = 3
 CELL_R = 2.5
@@ -16,8 +18,6 @@ HEADER_H = 24
 LEGEND_H = 30
 STATS_H = 36
 PAD = 16
-CARD_BG = "#161b22"
-CARD_STROKE = "#30363d"
 
 SVG_W = LABEL_W + WEEKS * (CELL_SIZE + CELL_GAP) + 16 + PAD * 2
 SVG_H = HEADER_H + DAYS * (CELL_SIZE + CELL_GAP) + LEGEND_H + STATS_H + 16 + PAD * 2
@@ -26,8 +26,9 @@ MONTH_LABELS = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 DAY_LABELS = ["Mon", "", "Wed", "", "Fri", "", ""]
 
-def build_heatmap(data_path: str = "data/contributions.json"):
+def build_heatmap(data_path: str = "data/contributions.json", theme: dict = THEMES["dark"]):
     """Return (width, height, inner_svg_markup) — no outer <svg> wrapper."""
+    palette = theme["heat_palette"]
     with open(data_path) as f:
         data = json.load(f)
 
@@ -68,7 +69,7 @@ def build_heatmap(data_path: str = "data/contributions.json"):
 
     # SVG
     svg = []
-    svg.append(f'<rect width="{SVG_W}" height="{SVG_H}" rx="8" fill="{CARD_BG}" stroke="{CARD_STROKE}" stroke-width="1"/>')
+    svg.append(f'<rect width="{SVG_W}" height="{SVG_H}" rx="8" fill="{theme["card_bg"]}" stroke="{theme["card_stroke"]}" stroke-width="1"/>')
 
     # Month labels
     prev_month = -1
@@ -78,14 +79,14 @@ def build_heatmap(data_path: str = "data/contributions.json"):
         m = d.month
         if m != prev_month:
             x = PAD + LABEL_W + wi * (CELL_SIZE + CELL_GAP)
-            svg.append(f'<text x="{x}" y="{PAD + HEADER_H - 6}" font-family="Courier New, Courier, monospace" font-size="10" fill="#8b949e">{MONTH_LABELS[m]}</text>')
+            svg.append(f'<text x="{x}" y="{PAD + HEADER_H - 6}" font-family="Courier New, Courier, monospace" font-size="10" fill="{theme["text_dim"]}">{MONTH_LABELS[m]}</text>')
             prev_month = m
 
     # Day labels
     for di in range(DAYS):
         y = PAD + HEADER_H + di * (CELL_SIZE + CELL_GAP) + CELL_SIZE - 2
         if DAY_LABELS[di]:
-            svg.append(f'<text x="{PAD}" y="{y}" font-family="Courier New, Courier, monospace" font-size="9" fill="#8b949e">{DAY_LABELS[di]}</text>')
+            svg.append(f'<text x="{PAD}" y="{y}" font-family="Courier New, Courier, monospace" font-size="9" fill="{theme["text_dim"]}">{DAY_LABELS[di]}</text>')
 
     # Cells with SMIL staggered animation (GitHub-safe)
     cell_idx = 0
@@ -94,7 +95,7 @@ def build_heatmap(data_path: str = "data/contributions.json"):
             level = weeks[wi][di] if di < len(weeks[wi]) else -1
             if level < 0:
                 continue
-            color = PALETTE[min(level, len(PALETTE) - 1)]
+            color = palette[min(level, len(palette) - 1)]
             x = PAD + LABEL_W + wi * (CELL_SIZE + CELL_GAP)
             y = PAD + HEADER_H + di * (CELL_SIZE + CELL_GAP)
             delay = (wi * DAYS + di) * 0.003
@@ -105,21 +106,21 @@ def build_heatmap(data_path: str = "data/contributions.json"):
 
     # Legend
     ly = PAD + HEADER_H + DAYS * (CELL_SIZE + CELL_GAP) + 12
-    svg.append(f'<text x="{PAD + LABEL_W}" y="{ly + 10}" font-family="Courier New, Courier, monospace" font-size="10" fill="#8b949e">Less</text>')
-    for i, c in enumerate(PALETTE):
+    svg.append(f'<text x="{PAD + LABEL_W}" y="{ly + 10}" font-family="Courier New, Courier, monospace" font-size="10" fill="{theme["text_dim"]}">Less</text>')
+    for i, c in enumerate(palette):
         lx = PAD + LABEL_W + 36 + i * (CELL_SIZE + CELL_GAP)
         svg.append(f'<rect x="{lx}" y="{ly}" width="{CELL_SIZE}" height="{CELL_SIZE}" rx="{CELL_R}" fill="{c}"/>')
-    svg.append(f'<text x="{PAD + LABEL_W + 36 + len(PALETTE) * (CELL_SIZE + CELL_GAP) + 6}" y="{ly + 10}" font-family="Courier New, Courier, monospace" font-size="10" fill="#8b949e">More</text>')
+    svg.append(f'<text x="{PAD + LABEL_W + 36 + len(palette) * (CELL_SIZE + CELL_GAP) + 6}" y="{ly + 10}" font-family="Courier New, Courier, monospace" font-size="10" fill="{theme["text_dim"]}">More</text>')
 
     # Stats
     total = data.get("total", 0)
     sy = ly + LEGEND_H + 8
-    svg.append(f'<text x="{PAD + LABEL_W}" y="{sy}" font-family="Courier New, Courier, monospace" font-size="11" fill="#8b949e">{total:,} contributions in the last year</text>')
+    svg.append(f'<text x="{PAD + LABEL_W}" y="{sy}" font-family="Courier New, Courier, monospace" font-size="11" fill="{theme["text_dim"]}">{total:,} contributions in the last year</text>')
 
     return SVG_W, SVG_H, '\n'.join(svg)
 
-def render_heatmap(data_path: str = "data/contributions.json", output_path: str = "contrib-heatmap.svg"):
-    svg_w, svg_h, inner = build_heatmap(data_path)
+def render_heatmap(data_path: str = "data/contributions.json", output_path: str = "contrib-heatmap.svg", theme: dict = THEMES["dark"]):
+    svg_w, svg_h, inner = build_heatmap(data_path, theme)
     full = f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {svg_w} {svg_h}" width="{svg_w}" height="{svg_h}">\n{inner}\n</svg>'
     os.makedirs(os.path.dirname(output_path) or '.', exist_ok=True)
     with open(output_path, 'w') as f:

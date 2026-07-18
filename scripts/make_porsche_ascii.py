@@ -4,22 +4,23 @@ import os
 import sys
 from PIL import Image, ImageSequence
 
+sys.path.insert(0, os.path.dirname(__file__))
+from theme import THEMES
+
 RAMP = " .:-=+*#%@"
 WIDTH = 60
 CELL_W = 7
 CELL_H = 12
 FRAME_STEP = 3  # sample every Nth gif frame to keep SVG size reasonable
 PAD = 16
-CARD_BG = "#161b22"
-CARD_STROKE = "#30363d"
 
 def brightness_to_char(b: float) -> str:
     idx = int(b * (len(RAMP) - 1))
     return RAMP[min(idx, len(RAMP) - 1)]
 
-def load_frames(path: str):
+def load_frames(path: str, backdrop=(13, 17, 23, 255)):
     im = Image.open(path)
-    base = Image.new("RGBA", im.size, (13, 17, 23, 255))  # #0d1117 backdrop
+    base = Image.new("RGBA", im.size, backdrop)
     frames = []
     durations = []
     for frame in ImageSequence.Iterator(im):
@@ -28,9 +29,13 @@ def load_frames(path: str):
         durations.append(frame.info.get("duration", 40))
     return frames, durations
 
-def build_porsche(input_path: str = "data/porsche-source.gif"):
+def hex_to_rgba(h: str):
+    h = h.lstrip('#')
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4)) + (255,)
+
+def build_porsche(input_path: str = "data/porsche-source.gif", theme: dict = THEMES["dark"]):
     """Return (width, height, inner_svg_markup) — no outer <svg> wrapper."""
-    raw_frames, raw_durations = load_frames(input_path)
+    raw_frames, raw_durations = load_frames(input_path, backdrop=hex_to_rgba(theme["card_bg"]))
     raw_frames = raw_frames[::FRAME_STEP]
     raw_durations = raw_durations[::FRAME_STEP]
     total_dur = sum(raw_durations) / 1000.0
@@ -58,7 +63,7 @@ def build_porsche(input_path: str = "data/porsche-source.gif"):
     svg_h = height * CELL_H + PAD * 2
 
     lines = []
-    lines.append(f'<rect width="{svg_w}" height="{svg_h}" rx="8" fill="{CARD_BG}" stroke="{CARD_STROKE}" stroke-width="1"/>')
+    lines.append(f'<rect width="{svg_w}" height="{svg_h}" rx="8" fill="{theme["card_bg"]}" stroke="{theme["card_stroke"]}" stroke-width="1"/>')
 
     keytimes = ";".join(f"{i/(num_frames-1):.4f}" for i in range(num_frames))
 

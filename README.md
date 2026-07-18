@@ -1,6 +1,6 @@
 <div align="center">
 
-```bash
+```
   __  __       ____               __    
  |  \/  |__  _ _\ \      / /__  _| |_  
  | |\/| / _` | '_ \ /\ / / _ \| '__| 
@@ -12,24 +12,24 @@
 
 <div align="center">
 
-<h3><code>vaib@github ~ $ ./contributions.sh</code></h3>
+### `vaib@github ~ $ ./contributions.sh`
 
 <img src="./contrib-heatmap.svg" width="860" />
 
-<br><br>
+<br>
 
-<h3><code>vaib@github ~ $ whoami</code></h3>
+### `vaib@github ~ $ whoami`
 
 <table>
-  <tr>
-    <td valign="top"><img src="./vaib-ascii.svg" width="370" /></td>
-    <td valign="top"><img src="./info-card.svg" width="490" /></td>
-  </tr>
+<tr>
+<td><img src="./vaib-ascii.svg" width="370" /></td>
+<td><img src="./info-card.svg" width="490" /></td>
+</tr>
 </table>
 
 <br>
 
-<h3><code>vaib@github ~ $ cat /etc/motd</code></h3>
+### `vaib@github ~ $ cat /etc/motd`
 
 ```
   Welcome to my corner of GitHub.

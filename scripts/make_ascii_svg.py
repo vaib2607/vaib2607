@@ -29,14 +29,7 @@ def make_ascii_svg(input_path: str, output_path: str = "vaib-ascii.svg"):
     lines = []
     lines.append(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {svg_w} {svg_h}" width="{svg_w}" height="{svg_h}">')
     lines.append(f'<rect width="{svg_w}" height="{svg_h}" fill="#0d1117"/>')
-    lines.append('<style>')
-    lines.append('  text { font-family: "Courier New", Courier, monospace; font-size: 13px; fill: #8b949e; }')
-    lines.append('  @keyframes typeRow {')
-    lines.append('    from { clip-path: inset(0 100% 0 0); }')
-    lines.append('    to   { clip-path: inset(0 0% 0 0); }')
-    lines.append('  }')
-    lines.append('  .row { animation: typeRow 0.4s steps(40) forwards; clip-path: inset(0 100% 0 0); }')
-    lines.append('</style>')
+    lines.append('<style>text { font-family: "Courier New", Courier, monospace; font-size: 13px; fill: #8b949e; }</style>')
 
     for row_idx in range(height):
         delay = row_idx * ANIM_DELAY_PER_ROW
@@ -50,7 +43,10 @@ def make_ascii_svg(input_path: str, output_path: str = "vaib-ascii.svg"):
                 chars.append(f'<text x="{x}" y="{y}">{ch}</text>')
         if chars:
             row_content = ''.join(chars)
-            lines.append(f'<g class="row" style="animation-delay:{delay:.2f}s">{row_content}</g>')
+            lines.append(f'<g opacity="0">')
+            lines.append(f'  <animate attributeName="opacity" from="0" to="1" begin="{delay:.2f}s" dur="0.3s" fill="freeze"/>')
+            lines.append(f'  {row_content}')
+            lines.append(f'</g>')
 
     lines.append('</svg>')
 

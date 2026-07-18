@@ -66,14 +66,7 @@ def render_heatmap(data_path: str = "data/contributions.json", output_path: str 
     svg = []
     svg.append(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {SVG_W} {SVG_H}" width="{SVG_W}" height="{SVG_H}">')
     svg.append(f'<rect width="{SVG_W}" height="{SVG_H}" fill="#0d1117"/>')
-    svg.append('<style>')
-    svg.append('  text { font-family: "Courier New", Courier, monospace; }')
-    svg.append('  @keyframes slideIn {')
-    svg.append('    from { opacity: 0; transform: translateY(-8px); }')
-    svg.append('    to   { opacity: 1; transform: translateY(0); }')
-    svg.append('  }')
-    svg.append('  .cell { animation: slideIn 0.15s ease-out forwards; opacity: 0; }')
-    svg.append('</style>')
+    svg.append('<style>text { font-family: "Courier New", Courier, monospace; }</style>')
 
     # Month labels
     prev_month = -1
@@ -92,7 +85,7 @@ def render_heatmap(data_path: str = "data/contributions.json", output_path: str 
         if DAY_LABELS[di]:
             svg.append(f'<text x="0" y="{y}" font-size="9" fill="#8b949e">{DAY_LABELS[di]}</text>')
 
-    # Cells with staggered animation
+    # Cells with SMIL staggered animation (GitHub-safe)
     cell_idx = 0
     for wi in range(min(WEEKS, len(weeks))):
         for di in range(DAYS):
@@ -103,7 +96,9 @@ def render_heatmap(data_path: str = "data/contributions.json", output_path: str 
             x = LABEL_W + wi * (CELL_SIZE + CELL_GAP)
             y = HEADER_H + di * (CELL_SIZE + CELL_GAP)
             delay = (wi * DAYS + di) * 0.003
-            svg.append(f'<rect class="cell" x="{x}" y="{y}" width="{CELL_SIZE}" height="{CELL_SIZE}" rx="{CELL_R}" fill="{color}" style="animation-delay:{delay:.3f}s"/>')
+            svg.append(f'<rect x="{x}" y="{y}" width="{CELL_SIZE}" height="{CELL_SIZE}" rx="{CELL_R}" fill="{color}" opacity="0">')
+            svg.append(f'  <animate attributeName="opacity" from="0" to="1" begin="{delay:.3f}s" dur="0.15s" fill="freeze"/>')
+            svg.append(f'</rect>')
             cell_idx += 1
 
     # Legend

@@ -18,14 +18,15 @@
 
 <br>
 
+### `vaib@github ~ $ ./plasma.sh`
+
+<img src="./plasma.svg" width="560" />
+
+<br>
+
 ### `vaib@github ~ $ whoami`
 
-<table>
-<tr>
-<td><img src="./vaib-ascii.svg" width="370" /></td>
-<td><img src="./info-card.svg" width="490" /></td>
-</tr>
-</table>
+<img src="./info-card.svg" width="490" />
 
 <br>
 

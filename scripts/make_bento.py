@@ -14,6 +14,7 @@ from make_info_card import build_info_card
 
 TILE_PAD = 8       # gap between a tile's outer shell and its inner card
 OUTER_PAD = 24     # margin around the whole composite
+ROW_GAP = 16       # gap between the top row and the motd panel
 GAP = 24           # gap between tiles
 RIGHT_W = 400      # display width of the right-column tiles' inner content
 SHELL_BG = "#1c2128"
@@ -66,7 +67,7 @@ def make_bento(output_path: str = "bento.svg"):
     motd_h = MOTD_PAD * 2 + len(MOTD_LINES) * MOTD_LINE_H
 
     svg_w = OUTER_PAD * 2 + row1_w
-    svg_h = OUTER_PAD * 3 + row1_h + motd_h
+    svg_h = OUTER_PAD * 2 + row1_h + ROW_GAP + motd_h
 
     parts = []
     parts.append(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {svg_w:.2f} {svg_h:.2f}" width="{svg_w:.0f}" height="{svg_h:.0f}">')
@@ -88,7 +89,7 @@ def make_bento(output_path: str = "bento.svg"):
     parts.append(nested(rx + TILE_PAD, ry2 + TILE_PAD, RIGHT_W, info_disp_h, info_w, info_h, info_inner))
 
     # motd — full-width row, playful copy, same shell as everything else
-    my = OUTER_PAD * 2 + row1_h
+    my = OUTER_PAD + row1_h + ROW_GAP
     parts.append(shell(OUTER_PAD, my, row1_w, motd_h))
     cx = OUTER_PAD + row1_w / 2
     ty = my + MOTD_PAD + 14

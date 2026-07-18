@@ -20,6 +20,17 @@ SHELL_BG = "#1c2128"
 SHELL_STROKE = "#30363d"
 SHELL_RX = 20
 
+MOTD_LINES = [
+    "yo — this is the github. it has an ascii car and a heatmap because why not.",
+    "",
+    "I build stuff for iOS, web, and whatever shiny thing hijacks my attention next.",
+    "currently down an AI/ML + open source rabbit hole, ask me about it, I will not stop talking.",
+    "",
+    "if you made it this far — hi. let's build something unhinged together.",
+]
+MOTD_LINE_H = 26
+MOTD_PAD = 28
+
 def shell(x, y, w, h):
     return f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{SHELL_RX}" fill="{SHELL_BG}" stroke="{SHELL_STROKE}" stroke-width="1"/>'
 
@@ -49,8 +60,13 @@ def make_bento(output_path: str = "bento.svg"):
     info_tile_h = info_disp_h + TILE_PAD * 2
     right_col_h = heat_tile_h + GAP + info_tile_h
 
-    svg_w = OUTER_PAD * 2 + hero_tile_w + GAP + right_tile_w
-    svg_h = OUTER_PAD * 2 + max(hero_tile_h, right_col_h)
+    row1_w = hero_tile_w + GAP + right_tile_w
+    row1_h = max(hero_tile_h, right_col_h)
+
+    motd_h = MOTD_PAD * 2 + len(MOTD_LINES) * MOTD_LINE_H
+
+    svg_w = OUTER_PAD * 2 + row1_w
+    svg_h = OUTER_PAD * 3 + row1_h + motd_h
 
     parts = []
     parts.append(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {svg_w:.2f} {svg_h:.2f}" width="{svg_w:.0f}" height="{svg_h:.0f}">')
@@ -70,6 +86,19 @@ def make_bento(output_path: str = "bento.svg"):
     ry2 = ry + heat_tile_h + GAP
     parts.append(shell(rx, ry2, right_tile_w, info_tile_h))
     parts.append(nested(rx + TILE_PAD, ry2 + TILE_PAD, RIGHT_W, info_disp_h, info_w, info_h, info_inner))
+
+    # motd — full-width row, playful copy, same shell as everything else
+    my = OUTER_PAD * 2 + row1_h
+    parts.append(shell(OUTER_PAD, my, row1_w, motd_h))
+    cx = OUTER_PAD + row1_w / 2
+    ty = my + MOTD_PAD + 14
+    for line in MOTD_LINES:
+        if line:
+            parts.append(
+                f'<text x="{cx:.2f}" y="{ty}" text-anchor="middle" '
+                f'font-family="Courier New, Courier, monospace" font-size="14" fill="#c9d1d9">{line}</text>'
+            )
+        ty += MOTD_LINE_H
 
     parts.append('</svg>')
 

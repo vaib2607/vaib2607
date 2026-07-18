@@ -1,14 +1,6 @@
 <div align="center">
 
-<table border="0" cellpadding="0" cellspacing="14">
-<tr>
-<td valign="middle"><img src="./vaib-ascii.svg" width="480" /></td>
-<td valign="middle">
-<img src="./contrib-heatmap.svg" width="380" /><br><br>
-<img src="./info-card.svg" width="380" />
-</td>
-</tr>
-</table>
+<img src="./bento.svg" width="960" />
 
 <br>
 

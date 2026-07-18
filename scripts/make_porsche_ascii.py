@@ -28,7 +28,8 @@ def load_frames(path: str):
         durations.append(frame.info.get("duration", 40))
     return frames, durations
 
-def make_porsche_svg(input_path: str = "data/porsche-source.gif", output_path: str = "vaib-ascii.svg"):
+def build_porsche(input_path: str = "data/porsche-source.gif"):
+    """Return (width, height, inner_svg_markup) — no outer <svg> wrapper."""
     raw_frames, raw_durations = load_frames(input_path)
     raw_frames = raw_frames[::FRAME_STEP]
     raw_durations = raw_durations[::FRAME_STEP]
@@ -57,9 +58,7 @@ def make_porsche_svg(input_path: str = "data/porsche-source.gif", output_path: s
     svg_h = height * CELL_H + PAD * 2
 
     lines = []
-    lines.append(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {svg_w} {svg_h}" width="{svg_w}" height="{svg_h}">')
     lines.append(f'<rect width="{svg_w}" height="{svg_h}" rx="8" fill="{CARD_BG}" stroke="{CARD_STROKE}" stroke-width="1"/>')
-    lines.append('<style>text { font-family: "Courier New", Courier, monospace; font-size: 11px; }</style>')
 
     keytimes = ";".join(f"{i/(num_frames-1):.4f}" for i in range(num_frames))
 
@@ -75,17 +74,24 @@ def make_porsche_svg(input_path: str = "data/porsche-source.gif", output_path: s
             x = PAD + col * CELL_W
             y = PAD + row * CELL_H + CELL_H - 2
 
-            lines.append(f'<text x="{x}" y="{y}" fill="{color0}">{glyph}')
+            lines.append(f'<text x="{x}" y="{y}" font-family="Courier New, Courier, monospace" font-size="11" fill="{color0}">{glyph}')
             lines.append(f'  <animate attributeName="fill" values="{colors}" keyTimes="{keytimes}" dur="{total_dur:.2f}s" repeatCount="indefinite"/>')
             lines.append('</text>')
 
-    lines.append('</svg>')
+    return svg_w, svg_h, '\n'.join(lines)
 
+def make_porsche_svg(input_path: str = "data/porsche-source.gif", output_path: str = "vaib-ascii.svg"):
+    svg_w, svg_h, inner = build_porsche(input_path)
+    full = (
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {svg_w} {svg_h}" width="{svg_w}" height="{svg_h}">\n'
+        f'<style>text {{ font-family: "Courier New", Courier, monospace; font-size: 11px; }}</style>\n'
+        f'{inner}\n</svg>'
+    )
     os.makedirs(os.path.dirname(output_path) or '.', exist_ok=True)
     with open(output_path, 'w') as f:
-        f.write('\n'.join(lines))
+        f.write(full)
     fsize = os.path.getsize(output_path)
-    print(f"Porsche ASCII SVG saved to {output_path} ({WIDTH}x{height}, {num_frames} frames, {fsize/1024:.0f}KB)")
+    print(f"Porsche ASCII SVG saved to {output_path} ({fsize/1024:.0f}KB)")
 
 if __name__ == "__main__":
     inp = sys.argv[1] if len(sys.argv) > 1 else "data/porsche-source.gif"

@@ -2,25 +2,25 @@
 """Generate a neofetch-style info card SVG with SMIL animations (GitHub-safe)."""
 import os
 
-CARD_W = 490
+CARD_W = 600
 CARD_H = 300
 LINE_H = 28
 DELAY_STEP = 0.15
 
-def make_info_card(output_path: str = "info-card.svg"):
+def build_info_card():
+    """Return (width, height, inner_svg_markup) — no outer <svg> wrapper."""
     lines_data = [
-        ("os",      "macOS Sequoia"),
-        ("editor",  "Neovim + VS Code"),
-        ("lang",    "Swift / Python / TypeScript"),
-        ("stack",   "React Native · SwiftUI · FastAPI"),
-        ("shell",   "zsh + starship"),
-        ("theme",   "GitHub Dark Dimmed"),
-        ("now",     "Building cool stuff"),
-        ("focus",   "iOS · Web · AI/ML"),
+        ("os",       "macOS Sequoia (14 tabs deep, send help)"),
+        ("editor",   "Neovim + VS Code, no I will not pick one"),
+        ("lang",     "Swift / Python / TypeScript, feral polyglot"),
+        ("stack",    "React Native · SwiftUI · FastAPI go brrr"),
+        ("shell",    "zsh + starship, prompt more decorated than me"),
+        ("theme",    "GitHub Dark Dimmed, my eyes said thanks"),
+        ("now",      "vibe coding at 2am, it's fine, it's shipped"),
+        ("focus",    "iOS · Web · AI/ML, brain has 47 open tabs too"),
     ]
 
     svg = []
-    svg.append(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {CARD_W} {CARD_H}" width="{CARD_W}" height="{CARD_H}">')
     svg.append(f'<rect width="{CARD_W}" height="{CARD_H}" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1"/>')
 
     # Title bar
@@ -41,11 +41,14 @@ def make_info_card(output_path: str = "info-card.svg"):
         svg.append(f'</g>')
         y += LINE_H
 
-    svg.append('</svg>')
+    return CARD_W, CARD_H, '\n'.join(svg)
 
+def make_info_card(output_path: str = "info-card.svg"):
+    card_w, card_h, inner = build_info_card()
+    full = f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {card_w} {card_h}" width="{card_w}" height="{card_h}">\n{inner}\n</svg>'
     os.makedirs(os.path.dirname(output_path) or '.', exist_ok=True)
     with open(output_path, 'w') as f:
-        f.write('\n'.join(svg))
+        f.write(full)
     print(f"Info card SVG saved to {output_path}")
 
 if __name__ == "__main__":

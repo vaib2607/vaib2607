@@ -26,7 +26,8 @@ MONTH_LABELS = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 DAY_LABELS = ["Mon", "", "Wed", "", "Fri", "", ""]
 
-def render_heatmap(data_path: str = "data/contributions.json", output_path: str = "contrib-heatmap.svg"):
+def build_heatmap(data_path: str = "data/contributions.json"):
+    """Return (width, height, inner_svg_markup) — no outer <svg> wrapper."""
     with open(data_path) as f:
         data = json.load(f)
 
@@ -67,9 +68,7 @@ def render_heatmap(data_path: str = "data/contributions.json", output_path: str 
 
     # SVG
     svg = []
-    svg.append(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {SVG_W} {SVG_H}" width="{SVG_W}" height="{SVG_H}">')
     svg.append(f'<rect width="{SVG_W}" height="{SVG_H}" rx="8" fill="{CARD_BG}" stroke="{CARD_STROKE}" stroke-width="1"/>')
-    svg.append('<style>text { font-family: "Courier New", Courier, monospace; }</style>')
 
     # Month labels
     prev_month = -1
@@ -79,14 +78,14 @@ def render_heatmap(data_path: str = "data/contributions.json", output_path: str 
         m = d.month
         if m != prev_month:
             x = PAD + LABEL_W + wi * (CELL_SIZE + CELL_GAP)
-            svg.append(f'<text x="{x}" y="{PAD + HEADER_H - 6}" font-size="10" fill="#8b949e">{MONTH_LABELS[m]}</text>')
+            svg.append(f'<text x="{x}" y="{PAD + HEADER_H - 6}" font-family="Courier New, Courier, monospace" font-size="10" fill="#8b949e">{MONTH_LABELS[m]}</text>')
             prev_month = m
 
     # Day labels
     for di in range(DAYS):
         y = PAD + HEADER_H + di * (CELL_SIZE + CELL_GAP) + CELL_SIZE - 2
         if DAY_LABELS[di]:
-            svg.append(f'<text x="{PAD}" y="{y}" font-size="9" fill="#8b949e">{DAY_LABELS[di]}</text>')
+            svg.append(f'<text x="{PAD}" y="{y}" font-family="Courier New, Courier, monospace" font-size="9" fill="#8b949e">{DAY_LABELS[di]}</text>')
 
     # Cells with SMIL staggered animation (GitHub-safe)
     cell_idx = 0
@@ -106,23 +105,26 @@ def render_heatmap(data_path: str = "data/contributions.json", output_path: str 
 
     # Legend
     ly = PAD + HEADER_H + DAYS * (CELL_SIZE + CELL_GAP) + 12
-    svg.append(f'<text x="{PAD + LABEL_W}" y="{ly + 10}" font-size="10" fill="#8b949e">Less</text>')
+    svg.append(f'<text x="{PAD + LABEL_W}" y="{ly + 10}" font-family="Courier New, Courier, monospace" font-size="10" fill="#8b949e">Less</text>')
     for i, c in enumerate(PALETTE):
         lx = PAD + LABEL_W + 36 + i * (CELL_SIZE + CELL_GAP)
         svg.append(f'<rect x="{lx}" y="{ly}" width="{CELL_SIZE}" height="{CELL_SIZE}" rx="{CELL_R}" fill="{c}"/>')
-    svg.append(f'<text x="{PAD + LABEL_W + 36 + len(PALETTE) * (CELL_SIZE + CELL_GAP) + 6}" y="{ly + 10}" font-size="10" fill="#8b949e">More</text>')
+    svg.append(f'<text x="{PAD + LABEL_W + 36 + len(PALETTE) * (CELL_SIZE + CELL_GAP) + 6}" y="{ly + 10}" font-family="Courier New, Courier, monospace" font-size="10" fill="#8b949e">More</text>')
 
     # Stats
     total = data.get("total", 0)
     sy = ly + LEGEND_H + 8
-    svg.append(f'<text x="{PAD + LABEL_W}" y="{sy}" font-size="11" fill="#8b949e">{total:,} contributions in the last year</text>')
+    svg.append(f'<text x="{PAD + LABEL_W}" y="{sy}" font-family="Courier New, Courier, monospace" font-size="11" fill="#8b949e">{total:,} contributions in the last year</text>')
 
-    svg.append('</svg>')
+    return SVG_W, SVG_H, '\n'.join(svg)
 
+def render_heatmap(data_path: str = "data/contributions.json", output_path: str = "contrib-heatmap.svg"):
+    svg_w, svg_h, inner = build_heatmap(data_path)
+    full = f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {svg_w} {svg_h}" width="{svg_w}" height="{svg_h}">\n{inner}\n</svg>'
     os.makedirs(os.path.dirname(output_path) or '.', exist_ok=True)
     with open(output_path, 'w') as f:
-        f.write('\n'.join(svg))
-    print(f"Heatmap SVG saved to {output_path} ({cell_idx} cells)")
+        f.write(full)
+    print(f"Heatmap SVG saved to {output_path}")
 
 if __name__ == "__main__":
     render_heatmap()

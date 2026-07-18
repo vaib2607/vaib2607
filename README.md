@@ -24,6 +24,12 @@
 
 <br>
 
+### `vaib@github ~ $ ./drive.sh`
+
+<img src="./vaib-ascii.svg" width="420" />
+
+<br>
+
 ### `vaib@github ~ $ whoami`
 
 <img src="./info-card.svg" width="490" />

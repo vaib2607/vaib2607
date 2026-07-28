@@ -958,7 +958,7 @@
 <rect x="768" y="120" width="13" height="13" rx="2.5" fill="#161b22" opacity="0">
   <animate attributeName="opacity" from="0" to="1" begin="0.939s" dur="0.15s" fill="freeze"/>
 </rect>
-<rect x="768" y="136" width="13" height="13" rx="2.5" fill="#26a641" opacity="0">
+<rect x="768" y="136" width="13" height="13" rx="2.5" fill="#006d32" opacity="0">
   <animate attributeName="opacity" from="0" to="1" begin="0.942s" dur="0.15s" fill="freeze"/>
 </rect>
 <rect x="784" y="40" width="13" height="13" rx="2.5" fill="#161b22" opacity="0">
@@ -967,7 +967,7 @@
 <rect x="784" y="56" width="13" height="13" rx="2.5" fill="#0e4429" opacity="0">
   <animate attributeName="opacity" from="0" to="1" begin="0.948s" dur="0.15s" fill="freeze"/>
 </rect>
-<rect x="784" y="72" width="13" height="13" rx="2.5" fill="#39d353" opacity="0">
+<rect x="784" y="72" width="13" height="13" rx="2.5" fill="#006d32" opacity="0">
   <animate attributeName="opacity" from="0" to="1" begin="0.951s" dur="0.15s" fill="freeze"/>
 </rect>
 <rect x="784" y="88" width="13" height="13" rx="2.5" fill="#161b22" opacity="0">
@@ -979,7 +979,7 @@
 <rect x="784" y="120" width="13" height="13" rx="2.5" fill="#161b22" opacity="0">
   <animate attributeName="opacity" from="0" to="1" begin="0.960s" dur="0.15s" fill="freeze"/>
 </rect>
-<rect x="784" y="136" width="13" height="13" rx="2.5" fill="#006d32" opacity="0">
+<rect x="784" y="136" width="13" height="13" rx="2.5" fill="#0e4429" opacity="0">
   <animate attributeName="opacity" from="0" to="1" begin="0.963s" dur="0.15s" fill="freeze"/>
 </rect>
 <rect x="800" y="40" width="13" height="13" rx="2.5" fill="#161b22" opacity="0">
@@ -1057,7 +1057,7 @@
 <rect x="848" y="88" width="13" height="13" rx="2.5" fill="#0e4429" opacity="0">
   <animate attributeName="opacity" from="0" to="1" begin="1.038s" dur="0.15s" fill="freeze"/>
 </rect>
-<rect x="848" y="104" width="13" height="13" rx="2.5" fill="#26a641" opacity="0">
+<rect x="848" y="104" width="13" height="13" rx="2.5" fill="#006d32" opacity="0">
   <animate attributeName="opacity" from="0" to="1" begin="1.041s" dur="0.15s" fill="freeze"/>
 </rect>
 <rect x="848" y="120" width="13" height="13" rx="2.5" fill="#161b22" opacity="0">
@@ -1099,10 +1099,10 @@
 <rect x="880" y="88" width="13" height="13" rx="2.5" fill="#0e4429" opacity="0">
   <animate attributeName="opacity" from="0" to="1" begin="1.080s" dur="0.15s" fill="freeze"/>
 </rect>
-<rect x="880" y="104" width="13" height="13" rx="2.5" fill="#0e4429" opacity="0">
+<rect x="880" y="104" width="13" height="13" rx="2.5" fill="#39d353" opacity="0">
   <animate attributeName="opacity" from="0" to="1" begin="1.083s" dur="0.15s" fill="freeze"/>
 </rect>
-<rect x="880" y="120" width="13" height="13" rx="2.5" fill="#0e4429" opacity="0">
+<rect x="880" y="120" width="13" height="13" rx="2.5" fill="#006d32" opacity="0">
   <animate attributeName="opacity" from="0" to="1" begin="1.086s" dur="0.15s" fill="freeze"/>
 </rect>
 <rect x="880" y="136" width="13" height="13" rx="2.5" fill="#0e4429" opacity="0">
@@ -1111,8 +1111,11 @@
 <rect x="896" y="40" width="13" height="13" rx="2.5" fill="#0e4429" opacity="0">
   <animate attributeName="opacity" from="0" to="1" begin="1.092s" dur="0.15s" fill="freeze"/>
 </rect>
-<rect x="896" y="56" width="13" height="13" rx="2.5" fill="#161b22" opacity="0">
+<rect x="896" y="56" width="13" height="13" rx="2.5" fill="#0e4429" opacity="0">
   <animate attributeName="opacity" from="0" to="1" begin="1.095s" dur="0.15s" fill="freeze"/>
+</rect>
+<rect x="896" y="72" width="13" height="13" rx="2.5" fill="#39d353" opacity="0">
+  <animate attributeName="opacity" from="0" to="1" begin="1.098s" dur="0.15s" fill="freeze"/>
 </rect>
 <text x="64" y="174" font-family="Courier New, Courier, monospace" font-size="10" fill="#8b949e">Less</text>
 <rect x="100" y="164" width="13" height="13" rx="2.5" fill="#161b22"/>
@@ -1121,5 +1124,5 @@
 <rect x="148" y="164" width="13" height="13" rx="2.5" fill="#26a641"/>
 <rect x="164" y="164" width="13" height="13" rx="2.5" fill="#39d353"/>
 <text x="186" y="174" font-family="Courier New, Courier, monospace" font-size="10" fill="#8b949e">More</text>
-<text x="64" y="202" font-family="Courier New, Courier, monospace" font-size="11" fill="#8b949e">32 contributions in the last year</text>
+<text x="64" y="202" font-family="Courier New, Courier, monospace" font-size="11" fill="#8b949e">36 contributions in the last year</text>
 </svg>
